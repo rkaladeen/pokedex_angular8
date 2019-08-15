@@ -1,20 +1,45 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+
+<nav class="nav-bar shadow-lg bg-dark py-3">
+  <h1 class="text-danger">Poke<span class="text-warning">dex</span></h1>
+</nav>
+<div class="container">
+
+  <div class="jumbotron w-75 mx-auto mt-5 shadow bg-dark text-light">
+    
+      <div class="row">
+        <img class="col" src="{{ pokemon.sprites.front_default }}" alt="{{ pokemon.id }}">
+        
+        <div class="col">
+          <h5>{{ pokemon.name | uppercase }}</h5>
+          <p class="my-1">Height: {{ pokemon.height }} cm</p>
+          <p class="my-1">Weight: {{ pokemon.weight }} kgs.</p>
+          <p class="my-1">Abilities: </p>
+          <ul>
+            <li *ngFor="let temp of pokemon.abilities; let i = index">{{ pokemon.abilities[i].ability.name }}</li>
+          </ul>
+          <!-- <p>{{ pokemon | json }}</p> -->
+        </div>
+      </div>
+    
+    
+  </div>
+
+  <div class="row">
+    <button *ngFor="let pk of db_pokemon.results; let i = index" class="jumbotron p-2 m-1 col btn shadow-sm bg-light" (click)="getPokemon(db_pokemon.results[i].url)">
+      <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{i+group+1}}.png" alt="{{ db_pokemon.results[i].name }}">
+      <small>{{ db_pokemon.results[i].name }}</small>
+    </button>
+  </div>
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-end">
+      <li class="page-item" [class.disabled]="group == 0"><button class="page-link disabled" (click)="moveGroup(-20)">Back</button></li>
+      <li class="page-item" [class.disabled]="group == 807"><button class="page-link" (click)="moveGroup(20)">Next</button></li>
+    </ul>
+  </nav>
+
+
+
+
+
 
