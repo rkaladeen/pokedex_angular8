@@ -30,7 +30,7 @@ webpackEmptyAsyncContext.id = "./$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n<div style=\"text-align:center\">\n  <h1>\n    Welcome to {{ title }}!\n  </h1>\n  <img width=\"300\" alt=\"Angular Logo\" src=\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==\">\n</div>\n<h2>Here are some links to help you start: </h2>\n<ul>\n  <li>\n    <h2><a target=\"_blank\" rel=\"noopener\" href=\"https://angular.io/tutorial\">Tour of Heroes</a></h2>\n  </li>\n  <li>\n    <h2><a target=\"_blank\" rel=\"noopener\" href=\"https://angular.io/cli\">CLI Documentation</a></h2>\n  </li>\n  <li>\n    <h2><a target=\"_blank\" rel=\"noopener\" href=\"https://blog.angular.io/\">Angular blog</a></h2>\n  </li>\n</ul>\n\n"
+module.exports = "\n<nav class=\"nav-bar shadow-lg bg-dark py-3\">\n  <h1 class=\"text-danger\">Poke<span class=\"text-warning\">dex</span></h1>\n</nav>\n<div class=\"container\">\n\n  <div class=\"jumbotron w-75 mx-auto mt-5 shadow bg-dark text-light\">\n    \n      <div class=\"row\">\n        <img class=\"col\" src=\"{{ pokemon.sprites.front_default }}\" alt=\"{{ pokemon.id }}\">\n        \n        <div class=\"col\">\n          <h5>{{ pokemon.name | uppercase }}</h5>\n          <p class=\"my-1\">Height: {{ pokemon.height }} cm</p>\n          <p class=\"my-1\">Weight: {{ pokemon.weight }} kgs.</p>\n          <p class=\"my-1\">Abilities: </p>\n          <ul>\n            <li *ngFor=\"let temp of pokemon.abilities; let i = index\">{{ pokemon.abilities[i].ability.name }}</li>\n          </ul>\n          <!-- <p>{{ pokemon | json }}</p> -->\n        </div>\n      </div>\n    \n    \n  </div>\n\n  <div class=\"row\">\n    <button *ngFor=\"let pk of db_pokemon.results; let i = index\" class=\"jumbotron p-2 m-1 col btn shadow-sm bg-light\" (click)=\"getPokemon(db_pokemon.results[i].url)\">\n      <img src=\"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{i+group+1}}.png\" alt=\"{{ db_pokemon.results[i].name }}\">\n      <small>{{ db_pokemon.results[i].name }}</small>\n    </button>\n  </div>\n</div>\n<nav aria-label=\"Page navigation example\">\n    <ul class=\"pagination justify-content-end\">\n      <li class=\"page-item\" [class.disabled]=\"group == 0\"><button class=\"page-link disabled\" (click)=\"moveGroup(-20)\">Back</button></li>\n      <li class=\"page-item\" [class.disabled]=\"group == 807\"><button class=\"page-link\" (click)=\"moveGroup(20)\">Next</button></li>\n    </ul>\n  </nav>\n\n\n\n\n\n\n"
 
 /***/ }),
 
@@ -57,13 +57,44 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppComponent", function() { return AppComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _http_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./http.service */ "./src/app/http.service.ts");
+
 
 
 let AppComponent = class AppComponent {
-    constructor() {
+    constructor(_httpService) {
+        this._httpService = _httpService;
         this.title = 'pokedex';
+        this.noSelection = true;
+        this.group = 0;
+    }
+    ngOnInit() {
+        this.getPokemonDB(this.group);
+        this.getPokemon("https://pokeapi.co/api/v2/pokemon/1/");
+    }
+    getPokemonDB(group) {
+        this.group = group;
+        let pokemonDB = this._httpService.getPokemonList(group);
+        pokemonDB.subscribe(data => {
+            this.db_pokemon = data;
+            console.log(data);
+        });
+    }
+    getPokemon(url) {
+        let pokemon = this._httpService.getPokemon(url);
+        pokemon.subscribe(data => {
+            this.pokemon = data;
+            console.log(data);
+        });
+    }
+    moveGroup(num) {
+        this.group = num + this.group;
+        this.getPokemonDB(this.group);
     }
 };
+AppComponent.ctorParameters = () => [
+    { type: _http_service__WEBPACK_IMPORTED_MODULE_2__["HttpService"] }
+];
 AppComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: 'app-root',
@@ -89,7 +120,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/platform-browser */ "./node_modules/@angular/platform-browser/fesm2015/platform-browser.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
-/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
+/* harmony import */ var _http_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./http.service */ "./src/app/http.service.ts");
+/* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
+
+
 
 
 
@@ -99,15 +134,56 @@ let AppModule = class AppModule {
 AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["NgModule"])({
         declarations: [
-            _app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"]
+            _app_component__WEBPACK_IMPORTED_MODULE_5__["AppComponent"]
         ],
         imports: [
-            _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"]
+            _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
+            _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClientModule"]
         ],
-        providers: [],
-        bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"]]
+        providers: [_http_service__WEBPACK_IMPORTED_MODULE_4__["HttpService"]],
+        bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_5__["AppComponent"]]
     })
 ], AppModule);
+
+
+
+/***/ }),
+
+/***/ "./src/app/http.service.ts":
+/*!*********************************!*\
+  !*** ./src/app/http.service.ts ***!
+  \*********************************/
+/*! exports provided: HttpService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HttpService", function() { return HttpService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm2015/http.js");
+
+
+
+let HttpService = class HttpService {
+    constructor(_http) {
+        this._http = _http;
+    }
+    getPokemonList(group) {
+        return this._http.get(`https://pokeapi.co/api/v2/pokemon/?offset=${group}&limit=20`);
+    }
+    getPokemon(url) {
+        return this._http.get(url);
+    }
+};
+HttpService.ctorParameters = () => [
+    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"] }
+];
+HttpService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+        providedIn: 'root'
+    })
+], HttpService);
 
 
 
